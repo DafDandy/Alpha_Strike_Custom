@@ -1,11 +1,16 @@
-import re
+import tkinter as tk
+from tkinter import filedialog
 import pandas as pd
 import weapon_dict
-import secret
 pd.set_option('display.max_rows', None)
 
 
-file = open(f"{secret.location}\Archer ARC-2K.txt").read()
+root = tk.Tk()
+root.withdraw()
+
+file_path = filedialog.askopenfilename()
+
+file = open(file_path).read()
 list_str = file.split('\n')
 list_str = [x for x in list_str if x != '' and len(x)<=60]
 
@@ -123,3 +128,12 @@ elif movement_dictionary['walking'] >= 20 and movement_dictionary['walking'] < 2
     tmm = 4
 elif movement_dictionary['walking'] > 24:
     tmm = 5
+
+print(attribute_dictionary)
+print(movement_dictionary)
+print(weapon_dict)
+print(heatsinks)
+print(structure)
+print(armor_rating)
+print(movement)
+print(tmm)
