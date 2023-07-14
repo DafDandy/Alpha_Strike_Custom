@@ -1,1 +1,0 @@
-location = r"C:\Users\ryan_\Downloads"
