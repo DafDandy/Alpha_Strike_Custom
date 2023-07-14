@@ -1,0 +1,1 @@
+machine_gun = [1,0,0]
