@@ -68,6 +68,9 @@ weapon_key = []
 for i in weapons:
     weapon_key.append(i[2:])
     weapon_value.append(i[:1])
+
+weapon_key = [x.replace(' ', '_') for x in weapon_key]
+
 weapon_dict = dict(zip(weapon_key, weapon_value))
 
 
@@ -129,11 +132,11 @@ elif movement_dictionary['walking'] >= 20 and movement_dictionary['walking'] < 2
 elif movement_dictionary['walking'] > 24:
     tmm = 5
 
-print(attribute_dictionary)
-print(movement_dictionary)
-print(weapon_dict)
-print(heatsinks)
-print(structure)
-print(armor_rating)
-print(movement)
-print(tmm)
+# print(attribute_dictionary)
+# print(movement_dictionary)
+# print(weapon_dict)
+# print(heatsinks)
+# print(structure)
+# print(armor_rating)
+# print(movement)
+# print(tmm)
