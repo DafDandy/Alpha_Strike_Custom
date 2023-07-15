@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
 import pandas as pd
-import weapon_dict
+import weapon_dict as wp
 pd.set_option('display.max_rows', None)
 
 
@@ -11,6 +11,7 @@ root.withdraw()
 file_path = filedialog.askopenfilename()
 
 file = open(file_path).read()
+
 list_str = file.split('\n')
 list_str = [x for x in list_str if x != '' and len(x)<=60]
 
@@ -72,7 +73,6 @@ for i in weapons:
 weapon_key = [x.replace(' ', '_') for x in weapon_key]
 
 weapon_dict = dict(zip(weapon_key, weapon_value))
-
 
 # Pulling heatsinks for overheat calculation
 if len([i for i in list_str if 'Double' in i]) >1:
@@ -140,3 +140,11 @@ elif movement_dictionary['walking'] > 24:
 # print(armor_rating)
 # print(movement)
 # print(tmm)
+
+damage = []
+heat = []
+ranges = []
+for i in weapon_key:
+    if hasattr(wp, i):
+        # print(getattr(wp, i))
+        damage.append(getattr(wp, i))
