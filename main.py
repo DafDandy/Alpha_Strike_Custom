@@ -5,12 +5,14 @@ import weapon_dict as wp
 pd.set_option('display.max_rows', None)
 
 
-root = tk.Tk()
-root.withdraw()
+# root = tk.Tk()
+# root.withdraw()
+#
+# file_path = filedialog.askopenfilename()
+#
+# file = open(file_path).read()
 
-file_path = filedialog.askopenfilename()
-
-file = open(file_path).read()
+file = open(r"C:\Users\ryan_\Downloads\Archer ARC-2K.txt").read()
 
 list_str = file.split('\n')
 list_str = [x for x in list_str if x != '' and len(x)<=60]
@@ -70,7 +72,7 @@ for i in weapons:
     weapon_key.append(i[2:])
     weapon_value.append(i[:1])
 
-weapon_key = [x.replace(' ', '_') for x in weapon_key]
+weapon_key = [x.replace(' ', '_').replace('/', '__').replace('-', '__') for x in weapon_key]
 
 weapon_dict = dict(zip(weapon_key, weapon_value))
 
@@ -141,10 +143,25 @@ elif movement_dictionary['walking'] > 24:
 # print(movement)
 # print(tmm)
 
-damage = []
+
 heat = []
-ranges = []
-for i in weapon_key:
-    if hasattr(wp, i):
-        # print(getattr(wp, i))
-        damage.append(getattr(wp, i))
+short = []
+medium = []
+long = []
+for x,y in weapon_dict.items():
+    if hasattr(wp, x):
+        if getattr(wp, x)[3] <= 3 and getattr(wp, x)[2] <= 3:
+            short.append(round(float(getattr(wp, x)[0]) * int(y)))
+            heat.append((int(getattr(wp, x)[1]) * int(y)))
+        if getattr(wp, x)[4] > 3:
+            medium.append(round(float(getattr(wp, x)[0]) * int(y)))
+        if getattr(wp, x)[3] > 3 and getattr(wp, x)[5] < 12:
+            heat.append((int(getattr(wp, x)[1]) * int(y)))
+        if getattr(wp, x)[5] > 12:
+            long.append(round(float(getattr(wp, x)[0]) * int(y)))
+            heat.append((int(getattr(wp, x)[1]) * int(y)))
+
+damage = [sum(short),sum(medium),sum(long)]
+# print(damage)
+# print(sum(heat))
+# print(weapons)
