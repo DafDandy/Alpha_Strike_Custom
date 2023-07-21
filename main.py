@@ -138,11 +138,11 @@ elif movement_dictionary['walking'] > 24:
 # print(attribute_dictionary)
 # print(movement_dictionary)
 # print(weapon_dict)
-print(heatsinks)
-print(structure)
-print(armor_rating)
-print(movement)
-print(tmm)
+print("Heatsinks: " + str(heatsinks))
+print("Structure: " + str(math.floor(structure/10)))
+print("Armor: " + str(armor_rating))
+print("Movement: " + str(movement))
+print("TMM: " + str(tmm))
 
 
 heat = []
@@ -165,15 +165,20 @@ for x,y in weapon_dict.items():
         if getattr(wp, x)[5] > 12:
             long.append(math.ceil(float(getattr(wp, x)[0]) * int(y)))
 
-
-if overheat >= 2 < 4:
+if overheat == 2:
     damage = [sum(short), sum(medium) - 1, sum(long) - 1]
-elif overheat <= 4:
-    damage = [sum(short) - 1, sum(medium) - 2, sum(long) - 2]
+elif overheat == 3:
+    damage = [sum(short) - 2, sum(medium) - 2, sum(long) - 2]
+elif overheat == 4:
+    damage = [sum(short) - 2, sum(medium) - 3, sum(long) - 3]
 else:
     damage = [sum(short), sum(medium), sum(long)]
 
-print(damage)
-print(sum(heat))
+damage = [0 if i < 0 else i for i in damage]
+
+print("Damage Bracket: " + str(damage))
+print("Heat: " + str(sum(heat)))
 print(weapons)
-print(overheat)
+print("Overheat: " + str(overheat))
+
+print(sum(heat) - heatsinks)
