@@ -1,19 +1,14 @@
 import tkinter as tk
 from tkinter import filedialog
-import pandas as pd
 import weapon_dict as wp
 import math
-pd.set_option('display.max_rows', None)
 
+root = tk.Tk()
+root.withdraw()
 
-# root = tk.Tk()
-# root.withdraw()
-#
-# file_path = filedialog.askopenfilename()
-#
-# file = open(file_path).read()
+file_path = filedialog.askopenfilename()
 
-file = open(r"C:\Users\Ryan\Downloads\Archer ARC-2K.txt").read()
+file = open(file_path).read()
 
 list_str = file.split('\n')
 list_str = [x for x in list_str if x != '' and len(x)<=60]
@@ -54,6 +49,9 @@ for line in lines:
                     key_value_pairs[current_key] += f', {line.strip()}'
             else:
                 key_value_pairs[current_key] += f', {line.strip()}'
+
+# Calculating PV
+PV = round(int(attribute_dictionary['Battle Value'].replace(',', '')) / 40)
 
 
 # Creating the weapon dictionary
@@ -104,7 +102,6 @@ structure = [structure[0][0][29:30],
 structure = sum([eval(i) for i in structure])
 
 #  Calculating the final outputs for the alpha strike card values
-
 armor_rating = round(armor / 30)
 
 if int(attribute_dictionary['Tonnage:']) < 40:
@@ -134,16 +131,6 @@ elif movement_dictionary['walking'] >= 20 and movement_dictionary['walking'] < 2
     tmm = 4
 elif movement_dictionary['walking'] > 24:
     tmm = 5
-
-# print(attribute_dictionary)
-# print(movement_dictionary)
-# print(weapon_dict)
-print("Heatsinks: " + str(heatsinks))
-print("Structure: " + str(math.floor(structure/10)))
-print("Armor: " + str(armor_rating))
-print("Movement: " + str(movement))
-print("TMM: " + str(tmm))
-
 
 heat = []
 for x,y in weapon_dict.items():
@@ -176,9 +163,12 @@ else:
 
 damage = [0 if i < 0 else i for i in damage]
 
-print("Damage Bracket: " + str(damage))
-print("Heat: " + str(sum(heat)))
-print(weapons)
+print("Mech: " + list_str[0])
+print("PV: " + str(PV))
+print("Movement: " + str(movement))
+print("TMM: " + str(tmm))
+print("Armament: " + str(weapons))
 print("Overheat: " + str(overheat))
-
-print(sum(heat) - heatsinks)
+print("Structure: " + str(math.floor(structure/10)))
+print("Armor: " + str(armor_rating))
+print("Damage Bracket: " + str(damage))
