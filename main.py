@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 import pandas as pd
 import weapon_dict as wp
+import math
 pd.set_option('display.max_rows', None)
 
 
@@ -12,7 +13,7 @@ pd.set_option('display.max_rows', None)
 #
 # file = open(file_path).read()
 
-file = open(r"C:\Users\ryan_\Downloads\Archer ARC-2K.txt").read()
+file = open(r"C:\Users\Ryan\Downloads\Archer ARC-2K.txt").read()
 
 list_str = file.split('\n')
 list_str = [x for x in list_str if x != '' and len(x)<=60]
@@ -137,31 +138,42 @@ elif movement_dictionary['walking'] > 24:
 # print(attribute_dictionary)
 # print(movement_dictionary)
 # print(weapon_dict)
-# print(heatsinks)
-# print(structure)
-# print(armor_rating)
-# print(movement)
-# print(tmm)
+print(heatsinks)
+print(structure)
+print(armor_rating)
+print(movement)
+print(tmm)
 
 
 heat = []
+for x,y in weapon_dict.items():
+    if hasattr(wp, x):
+       heat.append((int(getattr(wp, x)[1]) * int(y)))
+
+overheat = sum(heat)//10
+
+
 short = []
 medium = []
 long = []
 for x,y in weapon_dict.items():
     if hasattr(wp, x):
-        if getattr(wp, x)[3] <= 3 and getattr(wp, x)[2] <= 3:
-            short.append(round(float(getattr(wp, x)[0]) * int(y)))
-            heat.append((int(getattr(wp, x)[1]) * int(y)))
+        if getattr(wp, x)[3] <= 3 or getattr(wp, x)[2] <= 3:
+            short.append(math.ceil(float(getattr(wp, x)[0]) * int(y)))
         if getattr(wp, x)[4] > 3:
-            medium.append(round(float(getattr(wp, x)[0]) * int(y)))
-        if getattr(wp, x)[3] > 3 and getattr(wp, x)[5] < 12:
-            heat.append((int(getattr(wp, x)[1]) * int(y)))
+            medium.append(math.ceil(float(getattr(wp, x)[0]) * int(y)))
         if getattr(wp, x)[5] > 12:
-            long.append(round(float(getattr(wp, x)[0]) * int(y)))
-            heat.append((int(getattr(wp, x)[1]) * int(y)))
+            long.append(math.ceil(float(getattr(wp, x)[0]) * int(y)))
 
-damage = [sum(short),sum(medium),sum(long)]
-# print(damage)
-# print(sum(heat))
-# print(weapons)
+
+if overheat >= 2 < 4:
+    damage = [sum(short), sum(medium) - 1, sum(long) - 1]
+elif overheat <= 4:
+    damage = [sum(short) - 1, sum(medium) - 2, sum(long) - 2]
+else:
+    damage = [sum(short), sum(medium), sum(long)]
+
+print(damage)
+print(sum(heat))
+print(weapons)
+print(overheat)
