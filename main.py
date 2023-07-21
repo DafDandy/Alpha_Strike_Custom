@@ -2,13 +2,16 @@ import tkinter as tk
 from tkinter import filedialog
 import weapon_dict as wp
 import math
+import parameters as pm
 
-root = tk.Tk()
-root.withdraw()
+# root = tk.Tk()
+# root.withdraw()
+#
+# file_path = filedialog.askopenfilename()
+#
+# file = open(file_path).read()
 
-file_path = filedialog.askopenfilename()
-
-file = open(file_path).read()
+file = open(r"C:\Users\ryan_\Downloads\Archer ARC-2K.txt").read()
 
 list_str = file.split('\n')
 list_str = [x for x in list_str if x != '' and len(x)<=60]
@@ -51,7 +54,7 @@ for line in lines:
                 key_value_pairs[current_key] += f', {line.strip()}'
 
 # Calculating PV
-PV = round(int(attribute_dictionary['Battle Value'].replace(',', '')) / 40)
+PV = round(int(attribute_dictionary['Battle Value'].replace(',', '')) / pm.pv_calculation)
 
 
 # Creating the weapon dictionary
@@ -93,24 +96,24 @@ structure =[[i for i in list_str if 'Head' in i],
             [i for i in list_str if 'R/L Arm' in i],
             [i for i in list_str if 'R/L Leg' in i]]
 
-structure = [structure[0][0][29:30],
-             structure[1][0][29:31],
-             structure[2][0][29:31],
-             structure[3][0][29:31],
-             structure[4][0][29:31]]
+structure = [structure[pm.structure_head][0][29:30],
+             structure[pm.structure_ct][0][29:31],
+             structure[pm.structure_torso][0][29:31],
+             structure[pm.structure_arm][0][29:31],
+             structure[pm.structure_legs][0][29:31]]
 
 structure = sum([eval(i) for i in structure])
 
 #  Calculating the final outputs for the alpha strike card values
-armor_rating = round(armor / 30)
+armor_rating = round(armor / pm.armor_calculation_value)
 
-if int(attribute_dictionary['Tonnage:']) < 40:
+if int(attribute_dictionary['Tonnage:']) <= pm.light_mech:
     SZ = 1
-elif int(attribute_dictionary['Tonnage:']) >= 40 and int(attribute_dictionary['Tonnage:']) <= 55:
+elif int(attribute_dictionary['Tonnage:']) >= pm.light_mech and int(attribute_dictionary['Tonnage:']) <= pm.medium_mech:
     SZ = 2
-elif int(attribute_dictionary['Tonnage:']) >= 60 and int(attribute_dictionary['Tonnage:']) <= 75:
+elif int(attribute_dictionary['Tonnage:']) > pm.medium_mech and int(attribute_dictionary['Tonnage:']) < pm.assault_mech:
     SZ = 3
-elif int(attribute_dictionary['Tonnage:']) >= 80:
+elif int(attribute_dictionary['Tonnage:']) >= pm.assault_mech:
     SZ = 4
 
 if movement_dictionary['jumping'] == 0:
@@ -137,7 +140,7 @@ for x,y in weapon_dict.items():
     if hasattr(wp, x):
        heat.append((int(getattr(wp, x)[1]) * int(y)))
 
-overheat = sum(heat)//10
+overheat = sum(heat)//heatsinks
 
 
 short = []
@@ -145,12 +148,12 @@ medium = []
 long = []
 for x,y in weapon_dict.items():
     if hasattr(wp, x):
-        if getattr(wp, x)[3] <= 3 or getattr(wp, x)[2] <= 3:
-            short.append(math.ceil(float(getattr(wp, x)[0]) * int(y)))
-        if getattr(wp, x)[4] > 3:
-            medium.append(math.ceil(float(getattr(wp, x)[0]) * int(y)))
-        if getattr(wp, x)[5] > 12:
-            long.append(math.ceil(float(getattr(wp, x)[0]) * int(y)))
+        if getattr(wp, x)[3] <= pm.short_range or getattr(wp, x)[2] <= pm.short_range:
+            short.append(round(float(getattr(wp, x)[0]) * int(y)))
+        if getattr(wp, x)[4] > pm.medium_range:
+            medium.append(round(float(getattr(wp, x)[0]) * int(y)))
+        if getattr(wp, x)[5] > pm.long_range:
+            long.append(round(float(getattr(wp, x)[0]) * int(y)))
 
 if overheat == 2:
     damage = [sum(short), sum(medium) - 1, sum(long) - 1]
