@@ -11,7 +11,7 @@ import parameters as pm
 #
 # file = open(file_path).read()
 
-file = open(r"C:\Users\ryan_\Downloads\Archer ARC-2K.txt").read()
+file = open(r"C:\Users\ryan_\Downloads\Thug THG-13K.txt").read()
 
 list_str = file.split('\n')
 list_str = [x for x in list_str if x != '' and len(x)<=60]
@@ -140,7 +140,7 @@ for x,y in weapon_dict.items():
     if hasattr(wp, x):
        heat.append((int(getattr(wp, x)[1]) * int(y)))
 
-overheat = sum(heat)//heatsinks
+overheat = math.ceil(sum(heat)/heatsinks)
 
 
 short = []
@@ -175,3 +175,4 @@ print("Overheat: " + str(overheat))
 print("Structure: " + str(math.floor(structure/10)))
 print("Armor: " + str(armor_rating))
 print("Damage Bracket: " + str(damage))
+
