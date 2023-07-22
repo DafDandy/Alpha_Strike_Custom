@@ -4,14 +4,14 @@ import weapon_dict as wp
 import math
 import parameters as pm
 
-# root = tk.Tk()
-# root.withdraw()
-#
-# file_path = filedialog.askopenfilename()
-#
-# file = open(file_path).read()
+root = tk.Tk()
+root.withdraw()
 
-file = open(r"C:\Users\ryan_\Downloads\Thug THG-13K.txt").read()
+file_path = filedialog.askopenfilename()
+
+file = open(file_path).read()
+
+
 
 list_str = file.split('\n')
 list_str = [x for x in list_str if x != '' and len(x)<=60]
