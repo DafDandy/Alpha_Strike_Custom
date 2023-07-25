@@ -1,10 +1,13 @@
 import tkinter as tk
 from tkinter import filedialog
-
+import time
 import parameters
 import weapon_dict as wp
 import math
 import parameters as pm
+
+print("Please select your mech sheet that you wish to convert into an alpha strike card at the prompt...")
+time.sleep(2)
 
 root = tk.Tk()
 root.withdraw()
@@ -13,7 +16,7 @@ file_path = filedialog.askopenfilename()
 
 file = open(file_path).read()
 
-skill = int(input("Enter your skill level: "))
+skill = int(input("Enter your skill level between 0 and 6: "))
 
 list_str = file.split('\n')
 list_str = [x for x in list_str if x != '' and len(x)<=60]
@@ -119,8 +122,13 @@ movement = parameters.movement_calculation(movement_dictionary)
 
 tmm = parameters.tmm_calculation(movement_dictionary)
 
+print("Sending HPG message to Comstar...")
+time.sleep(2)
 
-
+print("Message received!"
+      "\n"
+      "Peace of Blake be with you"
+      "\n")
 print("Mech: " + list_str[0])
 print("PV: " + str(pv))
 print("Movement: " + str(movement))
@@ -132,3 +140,8 @@ print("Structure: " + str(math.floor(structure/10)))
 print("Armor: " + str(armor_rating))
 print("Damage Bracket: " + str(damage))
 
+print("""\n
+\n
+Conversion Complete!""")
+
+end = input(" \nPressing Enter twice will end transmission")

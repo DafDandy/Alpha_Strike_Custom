@@ -21,7 +21,7 @@ skill_4 = 1
 skill_5 = .9
 skill_6 = .85
 
-
+#need to get this part working for error exceptions
 def skill_calculation(skill, pv):
     if skill == 0:
         return round(pv * skill_0)
@@ -37,6 +37,7 @@ def skill_calculation(skill, pv):
         return round(pv * skill_5)
     elif skill == 6:
         return round(pv * skill_6)
+
 
 def size(attribute_dictionary):
     if int(attribute_dictionary['Tonnage:']) <= light_mech:
