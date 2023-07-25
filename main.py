@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
+
+import parameters
 import weapon_dict as wp
 import math
 import parameters as pm
@@ -11,7 +13,7 @@ file_path = filedialog.askopenfilename()
 
 file = open(file_path).read()
 
-
+skill = int(input("Enter your skill level: "))
 
 list_str = file.split('\n')
 list_str = [x for x in list_str if x != '' and len(x)<=60]
@@ -53,9 +55,6 @@ for line in lines:
             else:
                 key_value_pairs[current_key] += f', {line.strip()}'
 
-# Calculating PV
-PV = round(int(attribute_dictionary['Battle Value'].replace(',', '')) / pm.pv_calculation)
-
 
 # Creating the weapon dictionary
 keys = ['Armament']
@@ -78,70 +77,13 @@ weapon_key = [x.replace(' ', '_').replace('/', '__').replace('-', '__') for x in
 
 weapon_dict = dict(zip(weapon_key, weapon_value))
 
-# Pulling heatsinks for overheat calculation
-if len([i for i in list_str if 'Double' in i]) >1:
-    heatsinks = [i for i in list_str if 'Heat Sink' in i]
-    heatsinks = int(heatsinks[0][34:36])
-else:
-    heatsinks = [i for i in list_str if 'Heat Sink' in i]
-    heatsinks = int(heatsinks[0][30:32])
-
-#  Finding armor points
-armor = [i for i in list_str if 'Armor Factor' in i]
-armor = int(armor[0][30:33])
-
-structure =[[i for i in list_str if 'Head' in i],
-            [i for i in list_str if 'Center Torso' in i],
-            [i for i in list_str if 'R/L Torso' in i],
-            [i for i in list_str if 'R/L Arm' in i],
-            [i for i in list_str if 'R/L Leg' in i]]
-
-structure = [structure[pm.structure_head][0][29:30],
-             structure[pm.structure_ct][0][29:31],
-             structure[pm.structure_torso][0][29:31],
-             structure[pm.structure_arm][0][29:31],
-             structure[pm.structure_legs][0][29:31]]
-
-structure = sum([eval(i) for i in structure])
 
 #  Calculating the final outputs for the alpha strike card values
-armor_rating = round(armor / pm.armor_calculation_value)
-
-if int(attribute_dictionary['Tonnage:']) <= pm.light_mech:
-    SZ = 1
-elif int(attribute_dictionary['Tonnage:']) >= pm.light_mech and int(attribute_dictionary['Tonnage:']) <= pm.medium_mech:
-    SZ = 2
-elif int(attribute_dictionary['Tonnage:']) > pm.medium_mech and int(attribute_dictionary['Tonnage:']) < pm.assault_mech:
-    SZ = 3
-elif int(attribute_dictionary['Tonnage:']) >= pm.assault_mech:
-    SZ = 4
-
-if movement_dictionary['jumping'] == 0:
-    movement = str(movement_dictionary['walking']) + '"'
-elif movement_dictionary['jumping'] == movement_dictionary['walking']:
-    movement = str(movement_dictionary['walking']) + '"'
-elif movement_dictionary['jumping'] >= movement_dictionary['walking'] or movement_dictionary['jumping'] <= \
-        movement_dictionary['walking']:
-    movement = str(movement_dictionary['walking']) + '"/' + str(movement_dictionary['jumping']) + '"'
-
-if movement_dictionary['walking'] <= 8:
-    tmm = 1
-elif movement_dictionary['walking'] >= 10 and movement_dictionary['walking'] < 14:
-    tmm = 2
-elif movement_dictionary['walking'] >= 14 and movement_dictionary['walking'] < 20:
-    tmm = 3
-elif movement_dictionary['walking'] >= 20 and movement_dictionary['walking'] < 24:
-    tmm = 4
-elif movement_dictionary['walking'] > 24:
-    tmm = 5
 
 heat = []
 for x,y in weapon_dict.items():
     if hasattr(wp, x):
        heat.append((int(getattr(wp, x)[1]) * int(y)))
-
-overheat = math.ceil(sum(heat)/heatsinks)
-
 
 short = []
 medium = []
@@ -155,21 +97,35 @@ for x,y in weapon_dict.items():
         if getattr(wp, x)[5] > pm.long_range:
             long.append(round(float(getattr(wp, x)[0]) * int(y)))
 
-if overheat == 2:
-    damage = [sum(short), sum(medium) - 1, sum(long) - 1]
-elif overheat == 3:
-    damage = [sum(short) - 2, sum(medium) - 2, sum(long) - 2]
-elif overheat == 4:
-    damage = [sum(short) - 2, sum(medium) - 3, sum(long) - 3]
-else:
-    damage = [sum(short), sum(medium), sum(long)]
+# Final calculations
 
-damage = [0 if i < 0 else i for i in damage]
+pv = round(int(attribute_dictionary['Battle Value'].replace(',', '')) / pm.pv_calculation)
+
+armor, structure = parameters.armor_structure_calculation(list_str)
+
+heatsinks = parameters.heatsink_calculation(list_str)
+
+overheat = math.ceil(sum(heat)/heatsinks)
+
+damage = parameters.damage_calculation(overheat, short, medium, long)
+
+pv = parameters.skill_calculation(skill, pv)
+
+armor_rating = round(armor / pm.armor_calculation_value)
+
+size = parameters.size(attribute_dictionary)
+
+movement = parameters.movement_calculation(movement_dictionary)
+
+tmm = parameters.tmm_calculation(movement_dictionary)
+
+
 
 print("Mech: " + list_str[0])
-print("PV: " + str(PV))
+print("PV: " + str(pv))
 print("Movement: " + str(movement))
 print("TMM: " + str(tmm))
+print("Size: " + str(size))
 print("Armament: " + str(weapons))
 print("Overheat: " + str(overheat))
 print("Structure: " + str(math.floor(structure/10)))
