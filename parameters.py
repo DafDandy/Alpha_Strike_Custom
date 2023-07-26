@@ -13,6 +13,9 @@ structure_legs = 4
 armor_calculation_value = 30
 pv_calculation = 40
 
+#need to complete the list
+ammo_list = ['SRM 6 Ammo', 'SRM 4 Ammo', 'SRM 2 Ammo', 'Machine Gun Ammo', r'AC/20 Ammo', r'AC/10 Ammo', r'AC/5 Ammo', r'AC/2 Ammo']
+
 skill_0 = 1.75
 skill_1 = 1.6
 skill_2 = 1.4
@@ -104,3 +107,9 @@ def armor_structure_calculation(list_str):
                  structure[structure_legs][0][29:31]]])
 
     return armor, structure
+
+def ammo_count(ammo_list, list_str):
+    for l in ammo_list:
+        for i in list_str:
+            if l in i:
+                return i

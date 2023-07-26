@@ -5,6 +5,7 @@ import parameters
 import weapon_dict as wp
 import math
 import parameters as pm
+import re
 
 print("Please select your mech sheet that you wish to convert into an alpha strike card at the prompt...")
 time.sleep(2)
@@ -122,6 +123,8 @@ movement = parameters.movement_calculation(movement_dictionary)
 
 tmm = parameters.tmm_calculation(movement_dictionary)
 
+# ammo = parameters.ammo_count(parameters.ammo_list, list_str)
+
 print("Sending HPG message to Comstar...")
 time.sleep(2)
 
@@ -145,3 +148,4 @@ print("""\n
 Conversion Complete!""")
 
 end = input(" \nPressing Enter twice will end transmission")
+
