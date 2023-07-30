@@ -123,16 +123,26 @@ for x,y in weapon_dict.items():
             long.append(round(float(getattr(wp, x)[0]) * int(y)))
 
 # Final calculations
-
-pv = round(int(attribute_dictionary['Battle Value'].replace(',', '')) / pm.pv_calculation)
+if tech == 'inner':
+    pv = round(int(attribute_dictionary['Battle Value'].replace(',', '')) / pm.pv_calculation_is)
+if tech == 'clan':
+    pv = round(int(attribute_dictionary['Battle Value'].replace(',', '')) / pm.pv_calculation_clan)
 
 armor, structure = parameters.armor_structure_calculation(list_str)
 
-heatsinks = parameters.heatsink_calculation(list_str)
+if tech == 'inner':
+    heatsinks = parameters.heatsink_calculation_is(list_str)
+if tech == 'clan':
+    heatsinks = parameters.heatsink_calculation_clan(list_str)
 
 overheat = math.ceil(sum(heat)/heatsinks)
 
-damage = parameters.damage_calculation(overheat, short, medium, long)
+if tech == 'inner':
+    damage = parameters.damage_calculation_is(overheat, short, medium, long)
+if tech == 'clan':
+    damage = parameters.damage_calculation_clan(overheat, short, medium, long)
+
+
 
 # pv = parameters.skill_calculation(skill, pv)
 

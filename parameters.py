@@ -1,3 +1,5 @@
+import math
+
 short_range = 3
 medium_range = 3
 long_range = 12
@@ -11,7 +13,8 @@ structure_torso = 2
 structure_arm = 3
 structure_legs = 4
 armor_calculation_value = 30
-pv_calculation = 40
+pv_calculation_is = 40
+pv_calculation_clan = 45
 
 #need to complete the list
 ammo_list = ['SRM 6 Ammo', 'SRM 4 Ammo', 'SRM 2 Ammo', 'Machine Gun Ammo', r'AC/20 Ammo', r'AC/10 Ammo', r'AC/5 Ammo', r'AC/2 Ammo']
@@ -75,7 +78,7 @@ def tmm_calculation(movement_dictionary):
     elif movement_dictionary['walking'] > 24:
         return 5
 
-def damage_calculation(overheat, short, medium, long):
+def damage_calculation_is(overheat, short, medium, long):
     if overheat == 2:
         return [0 if i < 0 else i for i in [sum(short), sum(medium) - 1, sum(long) - 1]]
     elif overheat == 3:
@@ -85,11 +88,24 @@ def damage_calculation(overheat, short, medium, long):
     else:
         return [0 if i < 0 else i for i in[sum(short), sum(medium), sum(long)]]
 
-def heatsink_calculation(list_str):
+def damage_calculation_clan(overheat, short, medium, long):
+    if overheat == 2:
+        return [0 if i < 0 else i for i in [math.ceil(sum(short)), math.ceil(sum(medium)) - 1, math.ceil(sum(long)) - 1]]
+    elif overheat == 3:
+        return [0 if i < 0 else i for i in [math.ceil(sum(short)) - 2, math.ceil(sum(medium)) - 2, math.ceil(sum(long)) - 2]]
+    elif overheat == 4:
+        return [0 if i < 0 else i for i in [math.ceil(sum(short)) - 2, math.ceil(sum(medium)) - 3, math.ceil(sum(long)) - 3]]
+    else:
+        return [0 if i < 0 else i for i in[math.ceil(sum(short)), math.ceil(sum(medium)), math.ceil(sum(long))]]
+
+def heatsink_calculation_is(list_str):
     if len([i for i in list_str if 'Double' in i]) > 1:
         return int([i for i in list_str if 'Heat Sink' in i][0][34:36])
     else:
         return int([i for i in list_str if 'Heat Sink' in i][0][30:32])
+
+def heatsink_calculation_clan(list_str):
+    return int([i for i in list_str if 'Heat Sink' in i][0][34:36])
 
 def armor_structure_calculation(list_str):
     armor = int([i for i in list_str if 'Armor Factor' in i][0][30:33])
