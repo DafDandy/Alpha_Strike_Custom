@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
+from collections import Counter
 import time
 import parameters
 import weapon_dict as wp
@@ -7,8 +8,8 @@ import math
 import parameters as pm
 import re
 
-print("Please select your mech sheet that you wish to convert into an alpha strike card at the prompt...")
-time.sleep(2)
+# print("Please select your mech sheet that you wish to convert into an alpha strike card at the prompt...")
+# time.sleep(2)
 
 root = tk.Tk()
 root.withdraw()
@@ -17,14 +18,14 @@ file_path = filedialog.askopenfilename()
 
 file = open(file_path).read()
 
-skill = int(input("Enter your skill level between 0 and 6: "))
+# skill = int(input("Enter your skill level between 0 and 6: "))
 
 list_str = file.split('\n')
 list_str = [x for x in list_str if x != '' and len(x)<=60]
 
 attributes = []
 weapons = []
-values_interest = ['Cost', 'Technology Base', 'Tonnage:', 'Battle Value']
+values_interest = ['Technology Base', 'Tonnage:', 'Battle Value']
 for i in range(len(list_str)):
     for x in values_interest:
         if x in list_str[i]:
@@ -32,6 +33,11 @@ for i in range(len(list_str)):
 
 attributes = [s.strip() for s in attributes]
 attribute_dictionary = dict(zip(values_interest, attributes))
+
+if 'Clan' in attributes[0]:
+    tech = 'clan'
+else:
+    tech = 'inner'
 
 # Movement dict creation and calculation
 movement_substr = [i for i in list_str if 'MP' in i]
@@ -59,27 +65,42 @@ for line in lines:
             else:
                 key_value_pairs[current_key] += f', {line.strip()}'
 
-
-# Creating the weapon dictionary
-keys = ['Armament']
-dict2 = {x:key_value_pairs[x] for x in keys}
-weapons = dict2['Armament'].split(',')
-
 def strip_list_noempty(mylist):
     newlist = (item.strip() if hasattr(item, 'strip') else item for item in mylist)
     return [item for item in newlist if item != '']
 
-weapons = strip_list_noempty(weapons)
+if tech == 'inner':
+    # Creating the weapon dictionary for inner sphere
+    keys = ['Armament']
+    dict2 = {x:key_value_pairs[x] for x in keys}
+    weapons = dict2['Armament'].split(',')
 
-weapon_value = []
-weapon_key = []
-for i in weapons:
-    weapon_key.append(i[2:])
-    weapon_value.append(i[:1])
+    weapons = strip_list_noempty(weapons)
 
-weapon_key = [x.replace(' ', '_').replace('/', '__').replace('-', '__') for x in weapon_key]
+    weapon_value = []
+    weapon_key = []
+    for i in weapons:
+        weapon_key.append(i[2:])
+        weapon_value.append(i[:1])
 
-weapon_dict = dict(zip(weapon_key, weapon_value))
+    weapon_key = [x.replace(' ', '_').replace('/', '__').replace('-', '__') for x in weapon_key]
+
+    weapon_dict = dict(zip(weapon_key, weapon_value))
+
+if tech == 'clan':
+    keys = ['Left Arm Actuators']
+    dict2 = {x:key_value_pairs[x] for x in keys}
+    weapons = dict2['Left Arm Actuators'].split(',')
+
+    weapons = strip_list_noempty(weapons)[4:]
+    weapon_key = []
+    weapon_value = []
+    for i in weapons:
+        weapon_key.append(i[:26].strip())
+
+    weapon_key = [x.replace(' ', '_').replace('/', '__').replace('-', '__') for x in weapon_key]
+    weapon_dict = dict(Counter(weapon_key))
+
 
 
 #  Calculating the final outputs for the alpha strike card values
@@ -113,7 +134,7 @@ overheat = math.ceil(sum(heat)/heatsinks)
 
 damage = parameters.damage_calculation(overheat, short, medium, long)
 
-pv = parameters.skill_calculation(skill, pv)
+# pv = parameters.skill_calculation(skill, pv)
 
 armor_rating = round(armor / pm.armor_calculation_value)
 
@@ -137,7 +158,10 @@ print("PV: " + str(pv))
 print("Movement: " + str(movement))
 print("TMM: " + str(tmm))
 print("Size: " + str(size))
-print("Armament: " + str(weapons))
+if tech == 'inner':
+    print("Armament: " + str(weapons))
+if tech == 'clan':
+    print("Armament: " + str(weapon_dict))
 print("Overheat: " + str(overheat))
 print("Structure: " + str(math.floor(structure/10)))
 print("Armor: " + str(armor_rating))
@@ -147,5 +171,5 @@ print("""\n
 \n
 Conversion Complete!""")
 
-end = input(" \nPressing Enter twice will end transmission")
+# end = input(" \nPressing Enter twice will end transmission")
 
