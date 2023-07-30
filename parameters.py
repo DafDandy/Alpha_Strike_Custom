@@ -90,9 +90,9 @@ def damage_calculation_is(overheat, short, medium, long):
 
 def damage_calculation_clan(overheat, short, medium, long):
     if overheat == 2:
-        return [0 if i < 0 else i for i in [math.ceil(sum(short)), math.ceil(sum(medium)) - 1, math.ceil(sum(long)) - 1]]
+        return [0 if i < 0 else i for i in [math.ceil(sum(short)), math.ceil(sum(medium)), math.ceil(sum(long))]]
     elif overheat == 3:
-        return [0 if i < 0 else i for i in [math.ceil(sum(short)) - 2, math.ceil(sum(medium)) - 2, math.ceil(sum(long)) - 2]]
+        return [0 if i < 0 else i for i in [math.ceil(sum(short)) - 1, math.ceil(sum(medium)) - 2, math.ceil(sum(long)) - 2]]
     elif overheat == 4:
         return [0 if i < 0 else i for i in [math.ceil(sum(short)) - 2, math.ceil(sum(medium)) - 3, math.ceil(sum(long)) - 3]]
     else:
