@@ -18,7 +18,7 @@ file_path = filedialog.askopenfilename()
 
 file = open(file_path).read()
 
-# skill = int(input("Enter your skill level between 0 and 6: "))
+skill = int(input("Enter your skill level between 0 and 6: "))
 
 list_str = file.split('\n')
 list_str = [x for x in list_str if x != '' and len(x)<=60]
@@ -144,7 +144,7 @@ if tech == 'clan':
 
 
 
-# pv = parameters.skill_calculation(skill, pv)
+pv = parameters.skill_calculation(skill, pv)
 
 armor_rating = round(armor / pm.armor_calculation_value)
 
