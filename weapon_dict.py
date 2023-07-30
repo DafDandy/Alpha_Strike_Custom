@@ -1,3 +1,4 @@
+# [damage, heat, minimum_range, short, medium, long, tech_level]
 Machine_Gun = [.2,0,0,1,2,3,'IS']
 Small_Laser = [.3,1,0,1,2,3,'IS']
 Flamer = [.2,3,0,1,2,3,'IS']
